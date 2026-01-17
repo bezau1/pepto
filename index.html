@@ -57,6 +57,9 @@
 
 <body>
 
+  <!-- background music (plays after first interaction because browsers are cringe) -->
+  <audio id="bgm" src="bgmusic.mp3" loop preload="auto"></audio>
+
   <!-- LANDING -->
   <div class="page">
     <img src="assets/pages/page-01.png" alt="Pepto Landing">
@@ -99,6 +102,36 @@
   <footer>
     © 2026 Pepto — All rights reserved
   </footer>
+
+  <!-- music logic (autoplay is illegal, so we commit a legal crime instead) -->
+  <script>
+    const bgm = document.getElementById("bgm");
+    bgm.volume = 0; // start silent for cinematic effect
+
+    let started = false;
+
+    function startMusic() {
+      if (started) return;
+      started = true;
+
+      bgm.play().catch(() => {});
+
+      // smooth fade-in because we're fancy
+      let v = 0;
+      const fade = setInterval(() => {
+        v += 0.02;
+        bgm.volume = Math.min(v, 0.4);
+        if (v >= 0.4) clearInterval(fade);
+      }, 100);
+
+      window.removeEventListener("click", startMusic);
+      window.removeEventListener("keydown", startMusic);
+    }
+
+    // any interaction = welcome to Pepto
+    window.addEventListener("click", startMusic);
+    window.addEventListener("keydown", startMusic);
+  </script>
 
 </body>
 </html>
