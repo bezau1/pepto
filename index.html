@@ -1,249 +1,104 @@
+<!-- pro hacking skills no 1: dev console -->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pepto: The Restaurant</title>
+  <meta charset="utf-8">
+  <title>Pepto – The Restaurant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <style>
-    :root{
-      --bg:#e9d8bb;
-      --paper:#f6ead6;
-      --ink:#121212;
-      --muted:rgba(0,0,0,.65);
-      --gold:#b8893d;
-      --gold2:rgba(184,137,61,.55);
-      --shadow:0 18px 60px rgba(0,0,0,.18);
-      --green:#1d7a46;
-      --red:#c5392f;
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0;color:var(--ink);background:var(--bg);font-family:ui-serif,Georgia,"Times New Roman",serif}
-    a{color:inherit;text-decoration:none}
-    a:hover{text-decoration:underline}
-    .wrap{max-width:980px;margin:0 auto;padding:22px 16px 50px}
-
-    /* Parchment + ornate frame like the PDF cover */
-    .sheet{
-      background:
-        radial-gradient(circle at 25% 20%, rgba(255,255,255,.38), transparent 55%),
-        radial-gradient(circle at 80% 60%, rgba(0,0,0,.05), transparent 60%),
-        var(--paper);
-      border-radius:18px;
-      box-shadow:var(--shadow);
-      border:1px solid rgba(0,0,0,.14);
-      position:relative;
-      overflow:hidden;
-    }
-    .sheet::before{
-      content:"";
-      position:absolute; inset:18px;
-      border-radius:14px;
-      border:3px solid var(--gold2);
-      pointer-events:none;
-    }
-    .sheet::after{
-      content:"";
-      position:absolute; inset:34px;
-      border-radius:10px;
-      border:1px dashed rgba(0,0,0,.22);
-      pointer-events:none;
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    .top{
-      padding:34px 24px 10px;
-      text-align:center;
-    }
-    .title{
-      margin:0;
-      font-size: clamp(44px, 6vw, 76px);
-      letter-spacing:1px;
-      font-weight:800;
-      text-transform: none;
-    }
-    .subtitle{
-      margin:8px 0 0;
-      color:var(--muted);
-      font-size:16px;
-      letter-spacing:.3px;
+    body {
+      background: #1e1b29; /* dark neutral backdrop */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-    .oval{
-      width:210px;height:260px;
-      margin:18px auto 8px;
-      border-radius:110px / 130px;
-      border:8px solid var(--gold2);
-      box-shadow:0 18px 50px rgba(0,0,0,.22);
-      background:linear-gradient(90deg,var(--green) 0 33.33%, #fff 33.33% 66.66%, var(--red) 66.66% 100%);
+    /* I hope page is its own section */
+    .page {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding: 40px 0; /* breathing room between pages */
     }
 
-    .divider{
-      margin:18px auto 0;
-      width:min(640px, 92%);
-      height:1px;
-      background:linear-gradient(90deg, transparent, rgba(0,0,0,.25), transparent);
+    /* The images itself */
+    .page img {
+      width: auto;
+      max-width: 95vw;     /* fits screen width */
+      height: auto;        /* keeps original ratio */
+      max-height: none;    /* DO NOT force viewport height */
+      display: block;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+      border-radius: 6px;
     }
 
-    /* MENU typography like the PDF section headers */
-    .menuHeader{
-      text-align:center;
-      padding:22px 24px 0;
-    }
-    .menuHeader h2{
-      margin:0;
-      font-size:38px;
-      letter-spacing:2px;
-      text-transform:uppercase;
-    }
-    .menuHeader p{
-      margin:8px 0 0;
-      color:var(--muted);
+    /* last pages feel more ominous (wow) */
+    .suspense {
+      opacity: 0.92;
     }
 
-    .sections{padding:18px 24px 30px}
-    .sectionTitle{
-      margin:18px 0 10px;
-      font-size:24px;
-      letter-spacing:1.5px;
-      text-transform:uppercase;
-    }
-
-    .menuGrid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:18px;
-    }
-    .card{
-      background:rgba(255,255,255,.18);
-      border:1px solid rgba(0,0,0,.12);
-      border-radius:14px;
-      padding:14px 14px 10px;
-    }
-    .item{
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      padding:12px 0;
-      border-top:1px solid rgba(0,0,0,.10);
-    }
-    .item:first-child{border-top:0}
-    .item h4{margin:0;font-size:18px}
-    .item p{margin:4px 0 0;color:var(--muted);font-size:14px}
-    .tag{
-      align-self:flex-start;
-      font-size:12px;
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid rgba(0,0,0,.16);
-      background:rgba(255,255,255,.35);
-      white-space:nowrap;
-      font-weight:700;
-    }
-    .fine{
-      margin:12px 0 0;
-      color:var(--muted);
-      font-size:12px;
-      text-align:center;
-      padding:0 24px 26px;
-    }
-
-    footer{
-      text-align:center;
-      padding:16px 0 0;
-      color:var(--muted);
-      font-size:12px;
-    }
-
-    @media (max-width: 860px){
-      .menuGrid{grid-template-columns:1fr}
+    footer {
+      padding: 40px 0 60px;
+      color: rgba(255,255,255,0.4);
+      font-size: 12px;
+      font-family: serif;
+      text-align: center;
     }
   </style>
 </head>
 
 <body>
-  <div class="wrap">
-    <div class="sheet" id="home">
-      <div class="top">
-        <h1 class="title">Pepto</h1>
-        <div class="subtitle">The Restaurant</div>
-        <div class="oval" aria-label="Italian tricolor oval"></div>
-        <div class="divider"></div>
-      </div>
 
-      <div class="="menuHeader" style="text-align:center;padding:0 24px;">
-        <h2>Menu</h2>
-        <p>Luxury dining — fictional concept website.</p>
-      </div>
-
-      <div class="sections">
-        <div class="menuGrid">
-          <section class="card">
-            <div class="sectionTitle">Main Meals</div>
-
-            <div class="item">
-              <div>
-                <h4>Orangutano Suateano</h4>
-                <p>Oyster sauce • Coconut water</p>
-              </div>
-              <div class="tag">Signature</div>
-            </div>
-
-            <div class="item">
-              <div>
-                <h4>Delizioso Ostrichino</h4>
-                <p>Boiled ostrich • Fermented Power-Ade</p>
-              </div>
-              <div class="tag">Chef</div>
-            </div>
-
-            <div class="item">
-              <div>
-                <h4>De Monstera Bena</h4>
-                <p>Beans • Oyster sauce • Chip sauce</p>
-              </div>
-              <div class="tag">Wild</div>
-            </div>
-          </section>
-
-          <section class="card">
-            <div class="sectionTitle">Drinks</div>
-
-            <div class="item">
-              <div>
-                <h4>Fermented Power-Ade</h4>
-                <p>House “electric” fizz</p>
-              </div>
-              <div class="tag">Bubbly</div>
-            </div>
-
-            <div class="item">
-              <div>
-                <h4>Squid Ink</h4>
-                <p>Dark & dramatic</p>
-              </div>
-              <div class="tag">Ink</div>
-            </div>
-
-            <div class="item">
-              <div>
-                <h4>Cola / Diet Cola</h4>
-                <p>Classic refreshers</p>
-              </div>
-              <div class="tag">Classic</div>
-            </div>
-          </section>
-        </div>
-      </div>
-
-      <div class="fine">
-        Layout inspired by your PDF’s cover + menu structure (ornate frame + MENU headings). :contentReference[oaicite:2]{index=2} :contentReference[oaicite:3]{index=3}
-      </div>
-    </div>
-
-    <footer>© <span id="y"></span> Pepto: The Restaurant</footer>
+  <!-- LANDING -->
+  <div class="page">
+    <img src="assets/pages/page-01.png" alt="Pepto Landing">
   </div>
 
-  <script>
-    document.getElementById("y").textContent = new Date().getFullYear();
-  </script>
+  <!-- REVIEWS -->
+  <div class="page">
+    <img src="assets/pages/page-02.png" alt="Customer Reviews">
+  </div>
+
+  <!-- PREVIEW DISHES (wtf is there a million pages AAAAAAAA) -->
+  <div class="page"><img src="assets/pages/page-03.png"></div>
+  <div class="page"><img src="assets/pages/page-04.png"></div>
+  <div class="page"><img src="assets/pages/page-05.png"></div>
+  <div class="page"><img src="assets/pages/page-06.png"></div>
+  <div class="page"><img src="assets/pages/page-07.png"></div>
+  <div class="page"><img src="assets/pages/page-08.png"></div>
+  <div class="page"><img src="assets/pages/page-09.png"></div>
+  <div class="page"><img src="assets/pages/page-10.png"></div>
+  <div class="page"><img src="assets/pages/page-11.png"></div>
+
+  <!-- MENU -->
+  <div class="page"><img src="assets/pages/page-12.png"></div>
+  <div class="page"><img src="assets/pages/page-13.png"></div>
+  <div class="page"><img src="assets/pages/page-15.png"></div>
+
+  <!-- The cure for cancer (legit 100% source: trust me bro)-->
+  <div class="page"><img src="assets/pages/page-14.png"></div>
+
+  <!-- SUSPENSE / EMPTY -->
+  <div class="page suspense"><img src="assets/pages/page-16.png"></div>
+  <div class="page suspense"><img src="assets/pages/page-17.png"></div>
+  <div class="page suspense"><img src="assets/pages/page-18.png"></div>
+
+  <!-- THE BOX OF DOOM -->
+  <div class="page suspense">
+    <img src="assets/pages/page-19.png" alt="The Box">
+  </div>
+
+  <footer>
+    © 2026 Pepto — All rights reserved
+  </footer>
+
 </body>
 </html>
